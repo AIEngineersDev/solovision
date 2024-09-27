@@ -1,0 +1,6 @@
+track_thresh: 0.5  # tracking confidence threshold, should be the same as model conf
+track_buffer: 300  # the frames for keep lost tracks
+min_hits: 15
+match_thresh: 0.8  # matching threshold for tracking
+sec_match_thresh: 0.4
+frame_rate: 30     # FPS

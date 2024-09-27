@@ -94,6 +94,10 @@ def run(args):
 
         img = yolo.predictor.trackers[0].plot_results(r.orig_img, args.show_trajectories)
 
+        tracked_dict = yolo.predictor.trackers[0].id_tracking(r.orig_img)
+        
+        print(f"Unique Tracking ID's: {len(tracked_dict)}")
+
         if args.show is True:
             cv2.imshow('Solo-Vision', img)     
             key = cv2.waitKey(1) & 0xFF

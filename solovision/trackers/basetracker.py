@@ -3,6 +3,7 @@ import cv2 as cv
 import hashlib
 import colorsys
 from abc import ABC, abstractmethod
+from collections import defaultdict
 from solovision.utils import logger as LOGGER
 
 
@@ -32,6 +33,7 @@ class BaseTracker(ABC):
         self.nr_classes = nr_classes
         self.frame_count = 0
         self.per_class_active_tracks = None
+        self.id_map = defaultdict(list)
         
         # Initialize per-class active tracks
         if self.per_class:
@@ -254,4 +256,26 @@ class BaseTracker(ABC):
                                 img = self.plot_trackers_trajectories(img, a.history_observations, a.activation_id)
                     
         return img
+    
+
+    def id_tracking(self, img: np.ndarray):
+        """
+        Adds the bounding boxes, frame_id and respective image for each tracking id
+
+        """
+        
+        for a in self.active_tracks:
+            if a.is_activated:
+                if a.history_observations:
+                    if len(a.history_observations) > 2:
+                        frame = a.frame_id
+                        box = a.history_observations[-1]
+                        image = img
+                        id = a.activation_id
+                        frame_info = [frame, box,
+                        image]
+
+                        self.id_map[id].append(frame_info)
+
+        return self.id_map
 

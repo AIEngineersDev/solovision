@@ -9,6 +9,10 @@
 
 SoloVision is a state-of-the-art real-time object tracking system that seamlessly integrates with ReID (Re-Identification) architecture. Built on top of YOLO object detection, it provides robust multi-object tracking capabilities with advanced features for identity preservation across frames.
 
+<div align="center">
+  <img src="assets/results/solovision_results.gif" alt="SoloVision Results">
+</div>
+
 ## ✨ Key Features
 
 - 🎯 **High-Performance Tracking**: Implements ByteTrack algorithm for reliable multi-object tracking

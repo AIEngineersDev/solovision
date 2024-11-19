@@ -1,7 +1,9 @@
+__version__ = '2.0.0'
+
+from solovision.postprocessing.gsi import gsi
 from solovision.tracker_zoo import create_tracker, get_tracker_config
-from solovision.trackers.bytetrack.byte_tracker import BYTETracker
+from solovision.trackers.bytetrack.bytetracker import ByteTracker
 
 
-TRACKER = ['bytetrack']
-
-__all__ =  ("BYTETracker", "create_tracker", "get_tracker_config")
+__all__ = ("__version__",
+            "ByteTracker", "create_tracker", "get_tracker_config", "gsi")

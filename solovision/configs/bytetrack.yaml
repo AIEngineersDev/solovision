@@ -1,6 +1,39 @@
-track_thresh: 0.5  # tracking confidence threshold, should be the same as model conf
-track_buffer: 300  # the frames for keep lost tracks
-min_hits: 15
-match_thresh: 0.8  # matching threshold for tracking
-sec_match_thresh: 0.4
-frame_rate: 30     # FPS
+track_high_thresh:
+  type: uniform
+  default: 0.6  # from the default parameters
+  range: [0.3, 0.7]
+
+track_low_thresh:
+  type: uniform
+  default: 0.1  # from the default parameters
+  range: [0.1, 0.3]
+
+new_track_thresh:
+  type: uniform
+  default: 0.3  # from the default parameters
+  range: [0.1, 0.8]
+
+track_buffer:
+  type: randint
+  default: 300  # from the default parameters
+  range: [20, 81]
+
+match_thresh:
+  type: uniform
+  default: 0.8  # from the default parameters
+  range: [0.1, 0.9]
+
+proximity_thresh:
+  type: uniform
+  default: 0.5  # from the default parameters
+  range: [0.25, 0.75]
+
+appearance_thresh:
+  type: uniform
+  default: 0.35  # from the default parameters
+  range: [0.1, 0.8]
+
+cmc_method:
+  type: choice
+  default: ecc  # from the default parameters
+  options: [sof, ecc]

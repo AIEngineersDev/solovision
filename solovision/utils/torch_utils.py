@@ -1,14 +1,15 @@
+# Mikel Broström 🔥 Yolo Tracking 🧾 AGPL-3.0 license
+
 import os
 import platform
 import torch
 
-from .. import __version__
-from . import logger as LOGGER
-from solovision.utils import ROOT
+from ultralytics import __version__
+from ultralytics.utils import LOGGER
 
 
 def get_system_info():
-    return f"Yolo Tracking v{__version__} 🚀 Python-{platform.python_version()} torch-{torch.__version__}"
+    return f"Ultralytics v{__version__} 🚀 Python-{platform.python_version()} torch-{torch.__version__}"
 
 def parse_device(device):
     device = str(device).lower().replace("cuda:", "").replace("none", "").replace("(", "").replace(")", "").replace("[", "").replace("]", "").replace("'", "").replace(" ", "")

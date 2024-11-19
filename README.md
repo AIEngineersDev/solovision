@@ -30,6 +30,9 @@ Or install from source:
 ```bash
 git clone https://github.com/zeeshaan28/solovision.git
 cd solovision
+pip install .
+
+For Dev
 pip install -e .
 ```
 

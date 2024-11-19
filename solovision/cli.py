@@ -1,7 +1,7 @@
 import argparse
 import subprocess
 from pathlib import Path
-from solovision.utils import ROOT,  WEIGHTS
+from solovision.utils import WEIGHTS
 from solovision.track import run
 
 
@@ -33,7 +33,7 @@ def main():
     parser_track.add_argument('--save', action='store_true', help='save video tracking results')
     # class 0 is person, 1 is bycicle, 2 is car... 79 is oven
     parser_track.add_argument('--classes', nargs='+', type=int, help='filter by class: --classes 0, or --classes 0 2 3')
-    parser_track.add_argument('--project', default=ROOT / 'runs' / 'track', help='save results to project/name')
+    parser_track.add_argument('--project', default='runs/track', help='save results to project/name')
     parser_track.add_argument('--name', default='exp', help='save results to project/name')
     parser_track.add_argument('--exist-ok', action='store_true', help='existing project/name ok, do not increment')
     parser_track.add_argument('--half', action='store_true', help='use FP16 half-precision inference')

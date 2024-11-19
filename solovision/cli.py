@@ -10,6 +10,7 @@ def track_command(args):
     run(args)
     
 
+# Will be implemented later
 # def inference_command(args):
 #     """Run the Streamlit app for inference."""
 #     # Use subprocess to launch the Streamlit app with the required arguments
@@ -21,13 +22,13 @@ def main():
 
     # Sub-command for tracking
     parser_track = subparsers.add_parser("track", help="Run object tracking")
-    parser_track.add_argument('--yolo-model', type=str, default="yolov8n.pt", help='YOLO model path')
-    parser_track.add_argument('--reid-model', type=Path, default=WEIGHTS / 'osnet_x1_0_msmt17.pt', help='reid model path')
+    parser_track.add_argument('--yolo-model', type=str, default="yolov8n.pt", help='Yolo model path')
+    parser_track.add_argument('--reid-model', type=Path, default=WEIGHTS / 'osnet_x1_0_msmt17.pt', help='ReID model path')
     parser_track.add_argument('--source', type=str, default='0', help='Source for video input')
     parser_track.add_argument('--imgsz', '--img', '--img-size', nargs='+', type=int, default=[640], help='inference size h,w')
     parser_track.add_argument('--conf', type=float, default=0.5, help='Confidence threshold')
     parser_track.add_argument('--iou', type=float, default=0.7, help='IoU threshold for NMS')
-    parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
+    parser_track.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
     parser_track.add_argument('--show', action='store_true', help='display tracking video results')
     parser_track.add_argument('--save', action='store_true', help='save video tracking results')
     # class 0 is person, 1 is bycicle, 2 is car... 79 is oven
@@ -49,7 +50,7 @@ def main():
     parser_track.add_argument('--agnostic-nms', default=False, action='store_true', help='class-agnostic NMS')
 
     # Sub-command for inference
-    parser_inference = subparsers.add_parser("run_inference", help="Run Streamlit app for inference")
+    #parser_inference = subparsers.add_parser("run_inference", help="Run Streamlit app for inference")
     # Additional arguments can be added if needed for Streamlit
 
     args = parser.parse_args()

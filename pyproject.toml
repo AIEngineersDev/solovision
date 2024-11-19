@@ -1,11 +1,31 @@
 [tool.poetry]
 name = "solovision"
-version = "0.1.0"
-description = "A YOLO-based object tracking project using ByteTrack."
-authors = ["Zeeshaan", "Dhruv"]
+version = "0.2.0"
+description = "State-of-the-art Real Time Object Tracking System integrated with ReID architecture "
+authors = ["Solo"]
+license = "AGPL-3.0"
+readme = "README.md"
+classifiers = [
+    'Development Status :: 4 - Beta',
+    'Intended Audience :: Developers',
+    'Intended Audience :: Education',
+    'Intended Audience :: Science/Research',
+    'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Topic :: Software Development',
+    'Topic :: Scientific/Engineering',
+    'Topic :: Scientific/Engineering :: Artificial Intelligence',
+    'Topic :: Scientific/Engineering :: Image Recognition',
+    'Topic :: Scientific/Engineering :: Image Processing',
+]
+keywords = ["Object tracking", "ReID" , "machine-learning", "deep-learning", "vision", "Artificial Intelligence", "YOLO"]
 
-keywords = ["tracking", "vision", "YOLO"]
-
+packages = [
+    { include = "solovision", from = "." },
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -22,6 +42,7 @@ pandas = "^2.0.0"
 opencv-python = "^4.7.0"
 ftfy = "^6.1.3"
 gitpython = "^3.1.42"
+ultralytics = { git = "https://github.com/zeeshaan28/solo-ultralytics.git", rev = "bc44172f543ff2753058539c1fa48113d9e4c282", branch = "reid" }
 torch = [
     {version = "^2.2.1", source="torch_cuda121", markers = "sys_platform == 'linux' or sys_platform == 'win32'"},
     {version = "^2.2.1", source="pypi", markers = "sys_platform == 'darwin'"},  
@@ -38,8 +59,16 @@ isort = "^5.13.2"
 pytest-cov = "^5.0.0"
 
 
-[tool.poetry.group.yolo.dependencies]
-ultralytics = {git = "https://github.com/mikel-brostrom/ultralytics.git"}
+[tool.poetry.group.export.dependencies]
+onnx = "^1.15.0"
+onnxsim = "^0.4.36"
+openvino-dev = ">=2023.3,<2025.0"
+
+
+[tool.poetry.group.evolve.dependencies]
+ray = "^2.35.0"
+plotly = "^5.19.0"
+joblib = "^1.3.2"
 
 
 [[tool.poetry.source]]
@@ -47,15 +76,14 @@ name = "torch_cuda121"
 url = "https://download.pytorch.org/whl/cu121"
 priority = "explicit"
 
-[[tool.poetry.source]]
-name = "torchcpu"
-url = "https://download.pytorch.org/whl/cpu"
-priority = "explicit"
 
+[tool.poetry.scripts]
+solovision = "solovision.cli:main"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
 
 [tool.flake8]
 max-line-length = 120

@@ -37,7 +37,9 @@ cd solovision
 pip install .
 
 For Dev
-pip install -e .
+pip install poetry
+poetry install
+poetry shell
 ```
 
 ## 🚀 Quick Start

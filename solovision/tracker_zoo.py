@@ -1,33 +1,48 @@
-from types import SimpleNamespace
-
 import yaml
+from solovision.utils import TRACKER_CONFIGS
+from solovision.trackers.bytetrack.bytetracker import ByteTracker
 
-from solovision.utils import SOLO
-from solovision.trackers.bytetrack.byte_tracker import BYTETracker
 
 def get_tracker_config(tracker_type):
-    tracking_config = \
-        SOLO /\
-        'configs' /\
-        (tracker_type + '.yaml')
-    return tracking_config
+    """Returns the path to the tracker configuration file."""
+    return TRACKER_CONFIGS / f'{tracker_type}.yaml'
 
-
-def create_tracker(tracker_config=None, per_class = None):
-    # If config_dict is not provided, read from the file
-    with open(tracker_config, "r") as f:
-        cfg = yaml.load(f.read(), Loader=yaml.FullLoader)
-        cfg = SimpleNamespace(**cfg)  # easier dict access by dot, instead of ['']
-
-    bytetracker = BYTETracker(
-    per_class=per_class,
-    track_thresh=cfg.track_thresh,
-    match_thresh=cfg.match_thresh,
-    track_buffer=cfg.track_buffer,
-    frame_rate=cfg.frame_rate,
-    sec_match_thresh = cfg.sec_match_thresh,
-    min_hits = cfg.min_hits
-    )
-    return bytetracker
-
+def create_tracker(tracker_config=None, reid_weights=None, device=None, half=None, per_class=None, evolve_param_dict=None):
+    """
+    Creates and returns an instance of the specified tracker type.
     
+    Parameters:
+    - tracker_type: The type of the tracker (e.g., 'strongsort', 'ocsort').
+    - tracker_config: Path to the tracker configuration file.
+    - reid_weights: Weights for ReID (re-identification).
+    - device: Device to run the tracker on (e.g., 'cpu', 'cuda').
+    - half: Boolean indicating whether to use half-precision.
+    - per_class: Boolean for class-specific tracking (optional).
+    - evolve_param_dict: A dictionary of parameters for evolving the tracker.
+    
+    Returns:
+    - An instance of the selected tracker.
+    """
+    
+    # Load configuration from file or use provided dictionary
+    if evolve_param_dict is None:
+        with open(tracker_config, "r") as f:
+            yaml_config = yaml.load(f, Loader=yaml.FullLoader)
+            tracker_args = {param: details['default'] for param, details in yaml_config.items()}
+    else:
+        tracker_args = evolve_param_dict
+
+    # Arguments specific to ReID models
+    reid_args = {
+        'reid_weights': reid_weights,
+        'device': device,
+        'half': half,
+    }
+
+    tracker_class = ByteTracker
+    
+    tracker_args['per_class'] = per_class
+    tracker_args.update(reid_args)
+    
+    # Return the instantiated tracker class with arguments
+    return tracker_class(**tracker_args)

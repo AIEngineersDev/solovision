@@ -129,7 +129,8 @@ This project is licensed under the GNU Affero General Public License v3.0 - see 
 - ByteTrack algorithm implementation
 - Ultralytics YOLO
 - OSNet for ReID features
-- FastReID framework
+- BOXMOT
+- FastReID
 
 ---
 <p align="center">Made with ❤️ by Solo</p>

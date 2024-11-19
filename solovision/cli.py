@@ -22,7 +22,7 @@ def main():
     # Sub-command for tracking
     parser_track = subparsers.add_parser("track", help="Run object tracking")
     parser_track.add_argument('--yolo-model', type=str, default="yolov8n.pt", help='YOLO model path')
-    parser_track.add_argument('--reid-model', type=Path, default=WEIGHTS / 'osnet_x0_25_msmt17.pt', help='reid model path')
+    parser_track.add_argument('--reid-model', type=Path, default=WEIGHTS / 'osnet_x1_0_msmt17.pt', help='reid model path')
     parser_track.add_argument('--source', type=str, default='0', help='Source for video input')
     parser_track.add_argument('--imgsz', '--img', '--img-size', nargs='+', type=int, default=[640], help='inference size h,w')
     parser_track.add_argument('--conf', type=float, default=0.5, help='Confidence threshold')

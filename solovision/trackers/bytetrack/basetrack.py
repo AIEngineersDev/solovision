@@ -39,7 +39,7 @@ class BaseTrack:
     """
     _count = 0
 
-    _temp_id = 0
+    activation_id = 0
 
     track_id: int = 0
     is_activated: bool = False
@@ -78,9 +78,9 @@ class BaseTrack:
         return BaseTrack._count
 
     @staticmethod
-    def temp_id():
-        BaseTrack._temp_id += 1
-        return BaseTrack._temp_id
+    def activation():
+        BaseTrack.activation_id += 1
+        return BaseTrack.activation_id
     
 
     def activate(self, *args):

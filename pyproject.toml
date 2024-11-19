@@ -12,7 +12,6 @@ classifiers = [
     'Intended Audience :: Science/Research',
     'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
@@ -25,8 +24,7 @@ classifiers = [
 keywords = ["Object tracking", "ReID" , "machine-learning", "deep-learning", "vision", "Artificial Intelligence", "YOLO"]
 
 packages = [
-    { include = "solovision", from = "." },  # main package with all subfolders
-    { include = "solovision/**/*" },  # include all files in all subfolders
+    { include = "solovision", from = "." },
 ]
 
 [tool.poetry.dependencies]
@@ -44,7 +42,7 @@ pandas = "^2.0.0"
 opencv-python = "^4.7.0"
 ftfy = "^6.1.3"
 gitpython = "^3.1.42"
-ultralytics = { git = "https://github.com/zeeshaan28/solo-ultralytics.git", branch = "reid" }
+ultralytics = { git = "https://github.com/zeeshaan28/solo-ultralytics.git", rev = "bc44172f543ff2753058539c1fa48113d9e4c282", branch = "reid" }
 torch = [
     {version = "^2.2.1", source="torch_cuda121", markers = "sys_platform == 'linux' or sys_platform == 'win32'"},
     {version = "^2.2.1", source="pypi", markers = "sys_platform == 'darwin'"},  
@@ -78,10 +76,6 @@ name = "torch_cuda121"
 url = "https://download.pytorch.org/whl/cu121"
 priority = "explicit"
 
-[[tool.poetry.source]]
-name = "torchcpu"
-url = "https://download.pytorch.org/whl/cpu"
-priority = "explicit"
 
 [tool.poetry.scripts]
 solovision = "solovision.cli:main"

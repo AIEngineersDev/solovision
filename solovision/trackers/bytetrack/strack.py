@@ -22,7 +22,7 @@ class STrack(BaseTrack):
         self.mean, self.covariance = None, None
         self.is_activated = False
         self.tracklet_len = 0
-        self.temp = None
+        self.activation_id = None
 
         # Classification history and feature history
         self.cls_hist = []
@@ -108,7 +108,7 @@ class STrack(BaseTrack):
         self.state = TrackState.Tracked
         if frame_id == 1:
             self.is_activated = True
-            self.temp = self.temp_id()
+            self.activation_id = self.activation()
         self.frame_id = frame_id
         self.start_frame = frame_id
 
@@ -122,9 +122,9 @@ class STrack(BaseTrack):
 
         self.frame_id = frame_id
         if new_id:
-            self.temp = self.temp_id()
+            self.activation_id = self.activation()
         
-        if self.temp is not None:
+        if self.activation_id is not None:
             self.is_activated = True
         self.is_activated = True
         self.conf = new_track.conf
@@ -144,8 +144,8 @@ class STrack(BaseTrack):
 
         self.state = TrackState.Tracked
         if self.tracklet_len >= min_hits:
-            if self.temp == None:
-                self.temp = self.temp_id()
+            if self.activation_id is None:
+                self.activation_id = self.activation()
                 self.is_activated = True
 
         self.conf = new_track.conf

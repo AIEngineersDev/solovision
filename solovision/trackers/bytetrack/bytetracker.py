@@ -318,7 +318,7 @@ class ByteTracker(BaseTracker):
         )
 
         outputs = [
-            [*t.xyxy, t.temp, t.conf, t.cls, t.det_ind]
+            [*t.xyxy, t.activation_id, t.conf, t.cls, t.det_ind]
             for t in self.active_tracks if t.is_activated
         ]
 

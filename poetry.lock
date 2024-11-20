@@ -3209,8 +3209,8 @@ requests = ">=2.23.0"
 scipy = ">=1.4.1"
 seaborn = ">=0.11.0"
 torch = [
-    {version = ">=1.8.0", markers = "sys_platform != \"win32\""},
     {version = ">=1.8.0,<2.4.0 || >2.4.0", markers = "sys_platform == \"win32\""},
+    {version = ">=1.8.0", markers = "sys_platform != \"win32\""},
 ]
 torchvision = ">=0.9.0"
 tqdm = ">=4.64.0"
@@ -3226,8 +3226,8 @@ logging = ["comet", "dvclive (>=2.12.0)", "tensorboard (>=2.13.0)"]
 [package.source]
 type = "git"
 url = "https://github.com/zeeshaan28/solo-ultralytics.git"
-reference = "HEAD"
-resolved_reference = "ba2c435f076ee1cf0b9b9d22aa3f3f9a99b2329f"
+reference = "bc44172f543ff2753058539c1fa48113d9e4c282"
+resolved_reference = "bc44172f543ff2753058539c1fa48113d9e4c282"
 
 [[package]]
 name = "ultralytics-thop"
@@ -3323,4 +3323,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "8a08dcb12109d1cba5437696df302e8ff4986e66af81fdad0d5c31ee9e81bb79"
+content-hash = "83dd8f770edd227ec125c5a4742bc8816131abbed70f4fdfae15c3c589ea75f2"

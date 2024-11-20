@@ -1,13 +1,15 @@
-# 🚀 SoloVision
+# 🚀 Solovision
 
 <div align="center">
+
+<img src="assets/logo/logo.png" alt="Solovision Logo" width="200"/>
 
 [![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
 </div>
 
-SoloVision is a state-of-the-art real-time object tracking system that seamlessly integrates with ReID (Re-Identification) architecture. Built on top of YOLO object detection, it provides robust multi-object tracking capabilities with advanced features for identity preservation across frames.
+Solovision is a state-of-the-art real-time object tracking system that seamlessly integrates with ReID (Re-Identification) architecture. Built on top of YOLO object detection, it provides robust multi-object tracking capabilities with advanced features for identity preservation across frames.
 
 <div align="center">
   <img src="assets/results/solovision_results.gif" alt="SoloVision Results">
@@ -25,18 +27,21 @@ SoloVision is a state-of-the-art real-time object tracking system that seamlessl
 
 ## 🛠️ Installation
 
+Install the solovision package in a Python>=3.9 environment.
 ```bash
 pip install solovision
 ```
 
-Or install from source:
+Install from source:
 
 ```bash
-git clone https://github.com/zeeshaan28/solovision.git
+git clone https://github.com/AIEngineersDev/solovision.git
 cd solovision
 pip install .
+```
 
-For Dev
+Install in Dev
+```bash
 pip install poetry
 poetry install
 poetry shell
@@ -48,6 +53,7 @@ poetry shell
 
 ```python
 from solovision import ByteTracker
+from ultralytics import YOLO
 import cv2
 
 # Initialize tracker
@@ -64,8 +70,9 @@ while True:
     if not ret:
         break
         
-    # Get detections from your detector
-    detections = your_detector(frame)
+    # Get detections from yolo
+    model = YOLO('yolov8m.pt')
+    detections = model.detect(frame)
     
     # Update tracker
     tracks = tracker.update(detections, frame)
@@ -81,22 +88,28 @@ while True:
 
 ```bash
 # Track objects in a video
-solovision track --source video.mp4 --yolo-model yolov8n.pt --reid-model osnet_x1_0_msmt17.pt
+solovision track --source video_path --yolo-model yolov8n.pt --reid-model osnet_x1_0_msmt17.pt
 
 # Track with custom settings
-solovision track --source video.mp4 --conf 0.25 --iou 0.45 --show --save
+solovision track --source video_path --conf 0.25 --iou 0.45 --show --save --half \
+                --show-trajectories --save-txt --save-crops --per-class \
+                --classes 0 2 --device 0 --imgsz 640
+
+# View all available CLI options
+solovision track --help
 ```
 
-## 📋 Configuration Options
+## 🎯 ReID Models Support
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `reid_weights` | Path to ReID model weights | `osnet_x1_0_msmt17.pt` |
-| `track_high_thresh` | High confidence threshold | 0.5 |
-| `track_low_thresh` | Low confidence threshold | 0.1 |
-| `new_track_thresh` | New track threshold | 0.6 |
-| `track_buffer` | Frames to keep lost tracks | 30 |
-| `match_thresh` | Matching threshold | 0.8 |
+Solovision supports various state-of-the-art ReID architectures:
+
+- OSNet (x0.25, x0.5, x0.75, x1.0)
+- OSNet-AIN
+- OSNet-IBN
+- ResNet (50, 101)
+- CLIP-ReID
+
+Check out the [Model Zoo](https://kaiyangzhou.github.io/deep-person-reid/MODEL_ZOO.html) for pre-trained weights and performance benchmarks.
 
 ## 🔧 Advanced Features
 
@@ -113,6 +126,15 @@ solovision track --source video.mp4 --conf 0.25 --iou 0.45 --show --save
 - Optimized for both accuracy and speed
 - Scalable for multi-camera deployments
 
+## 🚀 Future Work
+
+- Interactive Web Application (Coming Soon!)
+  - Real-time tracking visualization
+  - Model performance analytics
+  - Easy configuration interface
+  - Results visualization and export
+  - Multiple video stream support
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
@@ -125,11 +147,13 @@ This project is licensed under the GNU Affero General Public License v3.0 - see 
 
 ```bibtex
 @software{solovision2024,
-  author = {Solo},
-  title = {SoloVision: State-of-the-art Real Time Object Tracking System},
+  author = {Diddi, Dhruv and Mohammed, Zeeshaan},
+  title = {Solovision: State-of-the-art Real Time Object Tracking System},
   year = {2024},
   publisher = {GitHub},
-  url = {https://github.com/zeeshaan28/solovision}
+  journal = {GitHub repository},
+  organization = {AIEngineersDev},
+  url = {https://github.com/AIEngineersDev/solovision}
 }
 ```
 

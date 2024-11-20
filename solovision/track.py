@@ -58,7 +58,7 @@ def run(args):
         conf=args.conf,
         iou=args.iou,
         agnostic_nms=args.agnostic_nms,
-        show=True,
+        show=args.show,
         stream=True,
         save_crop= args.save_crops,
         device=args.device,

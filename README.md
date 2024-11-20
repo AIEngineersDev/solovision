@@ -148,10 +148,9 @@ This project is licensed under the GNU Affero General Public License v3.0 - see 
 ```bibtex
 @software{solovision2024,
   author = {Diddi, Dhruv and Mohammed, Zeeshaan},
-  title = {Solovision: State-of-the-art Real Time Object Tracking System},
+  title = {Solovision: State-of-the-art Real-Time Object Tracking System},
   year = {2024},
   publisher = {GitHub},
-  journal = {GitHub repository},
   organization = {AIEngineersDev},
   url = {https://github.com/AIEngineersDev/solovision}
 }

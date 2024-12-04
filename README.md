@@ -95,7 +95,10 @@ solovision track --source video_path --conf 0.25 --iou 0.45 --show --save --half
                 --show-trajectories --save-txt --save-crops --per-class \
                 --classes 0 2 --device 0 --imgsz 640
 
-# View all available CLI options
+# Runs Interactive Web Application to perform real-time inference
+solovision inference 
+
+# View all available CLI args for Tracking
 solovision track --help
 ```
 
@@ -125,15 +128,6 @@ Check out the [Model Zoo](https://kaiyangzhou.github.io/deep-person-reid/MODEL_Z
 - Support for half-precision (FP16) inference
 - Optimized for both accuracy and speed
 - Scalable for multi-camera deployments
-
-## 🚀 Future Work
-
-- Interactive Web Application (Coming Soon!)
-  - Real-time tracking visualization
-  - Model performance analytics
-  - Easy configuration interface
-  - Results visualization and export
-  - Multiple video stream support
 
 ## 🤝 Contributing
 

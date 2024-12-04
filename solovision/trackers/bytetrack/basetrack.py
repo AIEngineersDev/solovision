@@ -25,6 +25,7 @@ class BaseTrack:
 
     Attributes:
         _count (int): Class variable to keep track of the number of tracks created.
+        activation_id (int): The unique ID assigned to the activated track (only activated tracks are displayed).
         track_id (int): The unique ID assigned to the track.
         is_activated (bool): Whether the track has been activated.
         state (TrackState): The current state of the track.
@@ -36,9 +37,9 @@ class BaseTrack:
         frame_id (int): The most recent frame ID associated with the track.
         time_since_update (int): The number of frames since the track was last updated.
         location (tuple): The location of the object in multi-camera tracking (set to infinity by default).
+        
     """
     _count = 0
-
     activation_id = 0
 
     track_id: int = 0
@@ -137,7 +138,6 @@ class BaseTrack:
 
     @staticmethod
     def clear_count():
-        """
-        Resets the track ID counter to 0.
-        """
+        """Reset all static counters."""
         BaseTrack._count = 0
+        BaseTrack.activation_id = 0

@@ -4,7 +4,6 @@ from pathlib import Path
 from solovision.utils import WEIGHTS, ROOT
 from solovision.track import run
 
-
 def track_command(args):
     """Runs the tracking using cli."""
     run(args)
@@ -13,6 +12,7 @@ def track_command(args):
 def inference_command(args):
     """Run the Solovision app for inference."""
     # Use subprocess to launch the app with the required arguments
+    print("🚀 Starting Solovision Live Inference ...")
     streamlit_path = ROOT / "solovision_app"/ "main.py"
     subprocess.run(["streamlit", "run", str(streamlit_path)])
 
@@ -56,6 +56,7 @@ def main():
     parser_track.add_argument('--vid-stride', type=int, default=1, help="Frame stride for video input")
 
     # Advanced options
+    parser_track.add_argument('--save-tracks', action='store_false', help="Save detected track_ids to the project folder")
     parser_track.add_argument('--with-reid', action='store_true', default=False, help="Use ReID features for tracking association")
     parser_track.add_argument('--line-width', type=int, default=None, help="Line width for bounding boxes (auto-scaled if None)")
     parser_track.add_argument('--agnostic-nms', action='store_true', help="Perform class-agnostic NMS")

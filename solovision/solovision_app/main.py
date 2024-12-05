@@ -122,11 +122,11 @@ def main():
     
     # Post Detection Settings
     st.sidebar.markdown("### Display and Save Options")
-    show_labels = st.sidebar.checkbox("Show Labels", True)
+    save_tracks = st.sidebar.checkbox("Save Track ID's", False)
     save_results = st.sidebar.checkbox("Save Results", False)
+    show_labels = st.sidebar.checkbox("Show Labels", True)
     save_crops = st.sidebar.checkbox("Save Crops", False)
     
-
     # Tracking configuration
     tracking_config = {
         'yolo_model': str(model_path),
@@ -138,6 +138,7 @@ def main():
         'show_labels': show_labels,
         'save': save_results,
         'save_crops': save_crops,
+        'save_tracks': save_tracks,
         'device': '' if torch.cuda.is_available() else 'cpu',
         'with_reid': with_reid
     }
@@ -154,11 +155,11 @@ def main():
         else:
             if track_button.button("Stop Tracking"):
                 reset_tracking_state()
+                if source_type == "Video File":
+                    cleanup_temp_file("solovision.mp4")
                 display_temporary_message("Stopping", spinner, message_type= "status", duration=2)
                 st.session_state.placeholders["tracking"].empty()
                 st.session_state.placeholders["video"].empty()
-                if source_type == "Video File":
-                    cleanup_temp_file("solovision.mp4")
                 st.rerun()
 
             if not st.session_state.stop_tracking:
@@ -174,7 +175,6 @@ def main():
                     def frame_callback(frame):
                         if st.session_state.stop_tracking:
                             return False
-                        
                         # Convert frame to Base64 to embed within HTML 
                         _, buffer = cv2.imencode('.jpg', frame)
                         encoded_frame = base64.b64encode(buffer).decode('utf-8')
@@ -204,12 +204,13 @@ def main():
                     st.error(f"Error during tracking: {str(e)}")
                 finally:
                     reset_tracking_state()
+                    if source_type == "Video File":
+                        cleanup_temp_file("solovision.mp4")
+                    display_temporary_message("Tracking Complete", spinner, message_type= "success", duration=2)
                     st.session_state.placeholders["tracking"].empty()
                     st.session_state.placeholders["video"].empty()
                     torch.cuda.empty_cache()
-                    if source_type == "Video File":
-                        cleanup_temp_file("solovision.mp4")
                     st.rerun()
-                
+                    
 if __name__ == "__main__":
     main()

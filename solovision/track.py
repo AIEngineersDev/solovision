@@ -61,6 +61,7 @@ def run(args):
         agnostic_nms=args.agnostic_nms,
         show=args.show,
         stream=True,
+        save_tracks =args.save_tracks,
         save_crop= args.save_crops,
         device=args.device,
         show_conf=args.show_conf,

@@ -45,5 +45,6 @@ def get_default_tracking_args():
         'line_width': None,
         'per_class': False,
         'verbose': True,
-        'agnostic_nms': False
+        'agnostic_nms': False,
+        'ext_track': True,
     }

@@ -184,14 +184,15 @@ def main():
                                 margin: 0px auto; 
                                 width: 80%; 
                                 max-width: 100%; 
-                                padding: 10px; 
-                                border: none; 
-                                border-radius: 10px; 
+                                padding: 10px;
+                                border: none;
+                                border-radius: 15px;
+                                background-color: black; 
                                 box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
                                 text-align: center;">
                                 <img src="data:image/jpeg;base64,{encoded_frame}" 
                                     alt="Video Frame" 
-                                    style="width: 100%; border-radius: 10px;">
+                                    style="width: 100%; border-radius: 15px;">
                             </div>
                             """,
                             unsafe_allow_html=True

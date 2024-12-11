@@ -3,6 +3,7 @@ import subprocess
 from pathlib import Path
 from solovision.utils import WEIGHTS, ROOT
 from solovision.track import run
+from solovision.utils import logger as LOGGER
 
 def track_command(args):
     """Runs the tracking using cli."""
@@ -35,7 +36,7 @@ def main():
     parser_track.add_argument('--conf', type=float, default=0.25, help="Confidence threshold (0.0 to 1.0)")
     parser_track.add_argument('--iou', type=float, default=0.7, help="IoU threshold for Non-Max Suppression (NMS)")
     parser_track.add_argument('--classes', nargs='+', type=int, help="Filter by class IDs (e.g., --classes 0 1 2)")
-
+    
     # Optional features
     parser_track.add_argument(
     '--imgsz', '--img', '--img-size', nargs='+', type=int, 
@@ -56,7 +57,7 @@ def main():
     parser_track.add_argument('--vid-stride', type=int, default=1, help="Frame stride for video input")
 
     # Advanced options
-    parser_track.add_argument('--save-tracks', action='store_false', help="Save detected track_ids to the project folder")
+    parser_track.add_argument('--save-tracks', action='store_true', default=False, help="Save detected track_ids to the project folder")
     parser_track.add_argument('--with-reid', action='store_true', default=False, help="Use ReID features for tracking association")
     parser_track.add_argument('--line-width', type=int, default=None, help="Line width for bounding boxes (auto-scaled if None)")
     parser_track.add_argument('--agnostic-nms', action='store_true', help="Perform class-agnostic NMS")

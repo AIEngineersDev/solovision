@@ -58,6 +58,7 @@ def run(args):
         source=args.source,
         conf=args.conf,
         iou=args.iou,
+        ext_track = True,
         agnostic_nms=args.agnostic_nms,
         show=args.show,
         stream=True,

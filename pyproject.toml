@@ -42,7 +42,7 @@ pandas = "^2.0.0"
 opencv-python = "^4.7.0"
 ftfy = "^6.1.3"
 gitpython = "^3.1.42"
-ultralytics = { git = "https://github.com/zeeshaan28/solo-ultralytics.git", rev = "bc44172f543ff2753058539c1fa48113d9e4c282", branch = "reid" }
+ultralytics = { git = "https://github.com/AIEngineersDev/solo-ultralytics.git"}
 torch = [
     {version = "^2.2.1", source="torch_cuda121", markers = "sys_platform == 'linux' or sys_platform == 'win32'"},
     {version = "^2.2.1", source="pypi", markers = "sys_platform == 'darwin'"},  

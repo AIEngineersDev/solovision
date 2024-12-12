@@ -74,7 +74,6 @@ class ByteTracker(BaseTracker):
         self.proximity_thresh = proximity_thresh
         self.appearance_thresh = appearance_thresh
         self.with_reid = with_reid
-        print(self.with_reid)
         if self.with_reid:
             self.model = ReidAutoBackend(
                 weights=reid_weights, device=device, half=half

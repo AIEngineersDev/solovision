@@ -54,32 +54,60 @@ def run(args):
         args.yolo_model if any(yolo in str(args.yolo_model) for yolo in ul_models) else 'yolov8n.pt',
     )
 
-    results = yolo.track(
-        source=args.source,
-        conf=args.conf,
-        iou=args.iou,
-        ext_track = True,
-        agnostic_nms=args.agnostic_nms,
-        show=args.show,
-        stream=True,
-        save_tracks =args.save_tracks,
-        save_crop= args.save_crops,
-        device=args.device,
-        show_conf=args.show_conf,
-        save_txt=args.save_txt,
-        show_labels=args.show_labels,
-        save=args.save,
-        verbose=args.verbose,
-        exist_ok=args.exist_ok,
-        project=args.project,
-        name=args.name,
-        classes=args.classes,
-        imgsz=args.imgsz,
-        vid_stride=args.vid_stride,
-        line_width=args.line_width
-    )
+    if args.command == 'track':
 
-    yolo.add_callback('on_predict_start', partial(on_predict_start, persist=True))
+        results = yolo.track(
+            source=args.source,
+            conf=args.conf,
+            iou=args.iou,
+            ext_track = True,
+            agnostic_nms=args.agnostic_nms,
+            show=args.show,
+            stream=True,
+            save_tracks =args.save_tracks,
+            save_crop= args.save_crops,
+            device=args.device,
+            show_conf=args.show_conf,
+            save_txt=args.save_txt,
+            show_labels=args.show_labels,
+            save=args.save,
+            verbose=args.verbose,
+            exist_ok=args.exist_ok,
+            project=args.project,
+            name=args.name,
+            classes=args.classes,
+            imgsz=args.imgsz,
+            vid_stride=args.vid_stride,
+            line_width=args.line_width
+        )
+
+        yolo.add_callback('on_predict_start', partial(on_predict_start, persist=True))
+
+    elif args.command =='detect':
+         results = yolo.predict(
+            source=args.source,
+            conf=args.conf,
+            iou=args.iou,
+            ext_track = False,
+            agnostic_nms=args.agnostic_nms,
+            show=args.show,
+            stream=True,
+            save_tracks =False,
+            save_crop= args.save_crops,
+            device=args.device,
+            show_conf=args.show_conf,
+            save_txt=args.save_txt,
+            show_labels=args.show_labels,
+            save=args.save,
+            verbose=args.verbose,
+            exist_ok=args.exist_ok,
+            project=args.project,
+            name=args.name,
+            classes=args.classes,
+            imgsz=args.imgsz,
+            vid_stride=args.vid_stride,
+            line_width=args.line_width
+        )
 
     if not any(yolo in str(args.yolo_model) for yolo in ul_models):
         # replace yolov8 model

@@ -69,6 +69,7 @@ def main():
     parser_track.add_argument('--half', action='store_true', help="Use FP16 half-precision for inference")
     parser_track.add_argument('--per-class', action='store_true', help="Do not mix up classes when tracking")
     parser_track.add_argument('--save-tracks', action='store_true', default=False, help="Save detected track_ids to the project folder")
+    parser_track.add_argument('--plot', action='store_true', default=False, help="Plot a line graph showing the Track_Id Count per frame")
     add_common_arguments(parser_track)  # Add common arguments
     # Parse arguments
     args = parser.parse_args()

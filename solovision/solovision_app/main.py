@@ -104,6 +104,9 @@ def main():
         else:
             selected_indices = [k for k, v in YOLO_CLASSES.items() if v in selected_classes]
 
+    command = st.sidebar.toggle('Tracking', value=False, 
+                           help='Enable ReID features for better tracking association')
+
     # Confidence and IOU thresholds
     conf_thres = st.sidebar.slider("Confidence Threshold", 0.0, 1.0, 0.25)
     iou_thres = st.sidebar.slider("IOU Threshold", 0.0, 1.0, 0.7)

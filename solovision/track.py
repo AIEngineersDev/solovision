@@ -5,12 +5,14 @@ from functools import partial
 from pathlib import Path
 
 import torch
+from ultralytics.cfg import get_save_dir
 from solovision.tracker_zoo import create_tracker
 from solovision.utils import ROOT, WEIGHTS, TRACKER_CONFIGS
 from solovision.utils.checks import RequirementsChecker
 
 from solovision.detectors import get_yolo_inferer
 from ultralytics import YOLO
+from solovision.post_processing import tracking_plot
 
 
 checker = RequirementsChecker()
@@ -81,8 +83,9 @@ def run(args):
             line_width=args.line_width
         )
 
+        
         yolo.add_callback('on_predict_start', partial(on_predict_start, persist=True))
-
+        
     elif args.command =='detect':
          results = yolo.predict(
             source=args.source,
@@ -122,15 +125,37 @@ def run(args):
     # store custom args in predictor
     yolo.predictor.custom_args = args
 
-    for r in results:
-        # Get the plotted frame from results
-        plotted_frame = r.plot()
-        
+    if args.command == "track" and args.plot:
+        save_dir = get_save_dir(args)
+        video_writer = tracking_plot(output_path=save_dir, init_only=True)
+        x_data, y_data = [], []  # Initialize data lists
+        frame_count = 0
+
+    for result in results:
+        frame_count += 1
+        plotted_frame = result.plot()
+
+        if args.command == "track" and args.plot:
+            graph_image, x_data, y_data = tracking_plot(
+                result=result, x_data=x_data, y_data=y_data,
+                video_writer=video_writer, frame=frame_count
+            )
+            if args.show is False:
+                cv2.imshow("Solovision Analytics", graph_image)
+                if cv2.waitKey(1) & 0xFF in (ord(' '), ord('q')):
+                    break
+
         # If stream_display callback is provided, use it
         if hasattr(args, 'stream_display') and args.stream_display is not None:
             args.stream_display(plotted_frame)
-            
-        if args.show is True:
-            if cv2.waitKey(1) & 0xFF in (ord(' '), ord('q')):
-                break
+        
+        # if args.show is False and :
+        #     cv2.imshow("Solovision Analytics", graph_image)
+        #     if cv2.waitKey(1) & 0xFF in (ord(' '), ord('q')):
+        #         break
+    
+    # Release video writer after processing all frames
+    if video_writer:
+        video_writer.release()
+
 

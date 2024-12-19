@@ -5,9 +5,8 @@ import argparse
 import streamlit as st
 from pathlib import Path
 from solovision.solovision_app.utils import *
-from solovision.solovision_app.config import initialize_session_state
 from solovision.solovision_app.yolo_classes import YOLO_CLASSES
-from solovision.track import run
+from solovision.inference import run
 from solovision.utils import WEIGHTS
 from solovision.solovision_app.model_selection import (
     get_model_sizes,
@@ -104,46 +103,44 @@ def main():
         else:
             selected_indices = [k for k, v in YOLO_CLASSES.items() if v in selected_classes]
 
-    command = st.sidebar.toggle('Tracking', value=False, 
-                           help='Enable ReID features for better tracking association')
-
     # Confidence and IOU thresholds
     conf_thres = st.sidebar.slider("Confidence Threshold", 0.0, 1.0, 0.25)
     iou_thres = st.sidebar.slider("IOU Threshold", 0.0, 1.0, 0.7)
-
-    # ReID tracking model selection
-    st.sidebar.markdown("### ReID Model Selection")
-    with_reid = st.sidebar.toggle('ReID Tracking', value=True, 
-                           help='Enable ReID features for better tracking association')
-    if with_reid:
-        reid_model = st.sidebar.selectbox(
-            "Select ReID Model", 
-            get_reid_models(),
-            index=get_reid_models().index("osnet_x1_0_msmt17.pt")
-    )
-    reid_model_path = WEIGHTS / reid_model if with_reid else None
+    
+    command = st.sidebar.toggle('Tracking', value=False, 
+                           help='Enables Object Tracking across video frames using unqiue ids')
+    if command:
+        # ReID tracking model selection
+        st.sidebar.markdown("### ReID Model Selection")
+        with_reid = st.sidebar.toggle('ReID Tracking', value=True, 
+                            help='Enable ReID features for better tracking association')
+        if with_reid:
+            reid_model = st.sidebar.selectbox(
+                "Select ReID Model", 
+                get_reid_models(),
+                index=get_reid_models().index("osnet_x1_0_msmt17.pt")
+        )
+    
+    reid_model_path = WEIGHTS / reid_model if command and with_reid else None
     
     # Post Detection Settings
     st.sidebar.markdown("### Display and Save Options")
-    save_tracks = st.sidebar.checkbox("Save Track ID's", False)
     save_results = st.sidebar.checkbox("Save Results", False)
     show_labels = st.sidebar.checkbox("Show Labels", True)
-    save_crops = st.sidebar.checkbox("Save Crops", False)
     
-    # Tracking configuration
-    tracking_config = {
+    # Model configuration
+    model_config = {
         'yolo_model': str(model_path),
         'reid_model': reid_model_path,
         'source': str(source),
         'conf': conf_thres,
         'iou': iou_thres,
+        'command': 'track' if command else 'detect',
         'classes': selected_indices,
         'show_labels': show_labels,
         'save': save_results,
-        'save_crops': save_crops,
-        'save_tracks': save_tracks,
         'device': '' if torch.cuda.is_available() else 'cpu',
-        'with_reid': with_reid
+        'with_reid': with_reid if command else False 
     }
 
     # Start or stop tracking
@@ -171,8 +168,8 @@ def main():
                 video_placeholder = st.session_state.placeholders["video"]
                 # Get default args and update with user config
                 default_args = get_default_tracking_args()
-                default_args.update(tracking_config)
-                tracking_args = argparse.Namespace(**default_args)
+                default_args.update(model_config)
+                model_args = argparse.Namespace(**default_args)
                 
                 try:
                     def frame_callback(frame):
@@ -202,8 +199,8 @@ def main():
                         )
                         return True
                     
-                    tracking_args.stream_display = frame_callback
-                    run(tracking_args)
+                    model_args.stream_display = frame_callback
+                    run(model_args)
                 except Exception as e:
                     st.error(f"Error during tracking: {str(e)}")
                 finally:

@@ -2,17 +2,18 @@ import argparse
 import subprocess
 from pathlib import Path
 from solovision.utils import WEIGHTS, ROOT
-from solovision.track import run
+from solovision.inference import run
 from solovision.utils import logger as LOGGER
 
-def track_command(args):
-    """Runs the tracking using cli."""
+def inference_cli(args):
+    """Runs the detection and tracking inference using cli."""
+    print("🚀 Starting Solovision Inference ...")
     run(args)
     
-def inference_command(args):
+def inference_app():
     """Run the Solovision app for inference."""
     # Use subprocess to launch the app with the required arguments
-    print("🚀 Starting Solovision Live Inference ...")
+    print("🚀 Starting Solovision Web Inference ...")
     streamlit_path = ROOT / "solovision_app"/ "main.py"
     subprocess.run(["streamlit", "run", str(streamlit_path)])
 
@@ -35,6 +36,7 @@ def add_common_arguments(parser):
     parser.add_argument('--show-labels', action='store_false', help="Display labels on tracked objects")
     parser.add_argument('--show-conf', action='store_false', help="Display confidence scores on tracked objects")
     parser.add_argument('--show-trajectories', action='store_true', help="Display object trajectories during tracking") 
+    parser.add_argument('--plot', action='store_true', default=False, help="Plot a line graph showing the Track_Id Count per frame")
     
     # Hardware ptions
     parser.add_argument('--device', default='', help="Specify device for inference (e.g., 'cuda:0', 'cpu')")
@@ -50,12 +52,12 @@ def add_common_arguments(parser):
 def main():
     # Main parser for the CLI
     parser = argparse.ArgumentParser(
-        description="Solo Vision CLI: Command-line tool for object tracking and inference"
+        description="Solo Vision CLI: Command-line tool for object detection, tracking and web app inference"
     )
     subparsers = parser.add_subparsers(dest="command", required=True, help="Available commands")
 
-    # Sub-command: Inference
-    parser_inference = subparsers.add_parser("inference", help="Run the Solovision web app for object detection and tracking inference")
+    # Sub-command: Web Inference
+    parser_inference = subparsers.add_parser("run_app", help="Run the Solovision web app for object detection and tracking inference")
 
     # Sub-command: Detection
     parser_detect = subparsers.add_parser("detect", help="Run object detection using cli")
@@ -69,16 +71,21 @@ def main():
     parser_track.add_argument('--half', action='store_true', help="Use FP16 half-precision for inference")
     parser_track.add_argument('--per-class', action='store_true', help="Do not mix up classes when tracking")
     parser_track.add_argument('--save-tracks', action='store_true', default=False, help="Save detected track_ids to the project folder")
-    parser_track.add_argument('--plot', action='store_true', default=False, help="Plot a line graph showing the Track_Id Count per frame")
     add_common_arguments(parser_track)  # Add common arguments
     # Parse arguments
     args = parser.parse_args()
 
+     
     # Execute the appropriate command
     if args.command == "track" or args.command == "detect":
-        track_command(args)
-    elif args.command == "inference":
-        inference_command(args)
+        # Validation: Ensure --show and --plot are not both true
+        if args.show and args.plot:
+            parser.error("The arguments --show and --plot cannot be used together. Choose one.")
+        if args.command == "detect" and args.plot:
+            parser.error("The plot feature is only supported with track command, Trying using solovision track.")
+        inference_cli(args)
+    elif args.command == "run_app":
+        inference_app()
     else:
         parser.print_help()
 

@@ -1,9 +1,11 @@
 import argparse
 import subprocess
 from pathlib import Path
+from solovision.utils.checks import RequirementsChecker
 from solovision.utils import WEIGHTS, ROOT
 from solovision.inference import run
 from solovision.utils import logger as LOGGER
+
 
 def inference_cli(args):
     """Runs the detection and tracking inference using cli."""
@@ -19,7 +21,7 @@ def inference_app():
 
 def add_common_arguments(parser):
     """Add common arguments for track and detect commands."""
-    parser.add_argument('--yolo-model', type=str, default=str(WEIGHTS / "yolov8n.pt"), help="Path to YOLO model")
+    parser.add_argument('--yolo-model', type=str, default=str(WEIGHTS / "yolov8s.pt"), help="Path to YOLO model")
     parser.add_argument('--source', type=str, default='0', help="Input source (video file, webcam ID, or stream URL)")
     parser.add_argument('--conf', type=float, default=0.25, help="Confidence threshold (0.0 to 1.0)")
     parser.add_argument('--iou', type=float, default=0.7, help="IoU threshold for Non-Max Suppression (NMS)")
@@ -75,7 +77,6 @@ def main():
     # Parse arguments
     args = parser.parse_args()
 
-     
     # Execute the appropriate command
     if args.command == "track" or args.command == "detect":
         # Validation: Ensure --show and --plot are not both true

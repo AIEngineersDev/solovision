@@ -43,6 +43,7 @@ def get_custom_css():
         font-weight: 600 !important;
         margin-bottom: 0.3rem !important;
         line-height: 1.2 !important;
+        margin-top: -0.5rem !important;
     }
     
     .title-section h3 {

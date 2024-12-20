@@ -7,14 +7,10 @@ import torch
 from ultralytics.cfg import get_save_dir
 from solovision.tracker_zoo import create_tracker
 from solovision.utils import ROOT, WEIGHTS, TRACKER_CONFIGS
-from solovision.utils.checks import RequirementsChecker
 from solovision.detectors import get_yolo_inferer
 from ultralytics import YOLO
 from solovision.post_processing import tracking_plot
 
-# Check requirements
-checker = RequirementsChecker()
-checker.check_packages(('ultralytics @ git+https://github.com/AIEngineersDev/solo-ultralytics.git', )) 
 
 def ultralytics_model(model, ul_models):
     """Check if the given model belongs to the list of supported ultralytics models."""
@@ -50,7 +46,7 @@ def run(args):
     ul_models = ['yolov3', 'yolov5', 'yolov8', 'yolov9', 'yolov10', 'yolo11', 'rtdetr', 'sam']
 
     # Initialize YOLO model
-    yolo = YOLO(args.yolo_model if ultralytics_model(args.yolo_model, ul_models) else 'yolov8n.pt')
+    yolo = YOLO(args.yolo_model if ultralytics_model(args.yolo_model, ul_models) else 'yolov8s.pt')
 
     # Common parameters for prediction and tracking
     params = {

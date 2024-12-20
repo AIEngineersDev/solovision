@@ -10,7 +10,7 @@ SIZES = {
 YOLO_MODEL_SIZES = {
     "YOLOv3": {
         "-tiny": "Tiny",
-        "": "Medium",
+        "": "Small",
         "-spp": "SPP"
     },
     "YOLOv5": SIZES,

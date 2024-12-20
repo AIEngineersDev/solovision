@@ -33,6 +33,9 @@ def main():
         st.session_state.placeholders["description"].empty()
     
     # Sidebar: Source selection
+    st.logo(image="https://raw.githubusercontent.com/AIEngineersDev/solovision/multiple-trackers/assets/logo/logo.png",
+            size= 'large', link = "http://localhost:8501/?page=home")
+    
     source_type = st.sidebar.selectbox(
         "Select Source",
         ["Video File", "Webcam", "Stream"]
@@ -76,7 +79,7 @@ def main():
         size_index = st.sidebar.selectbox(
             "Model Size", 
             display_sizes,
-            index=display_sizes.index("Medium")
+            index=display_sizes.index("Small")
         )
         size = model_sizes[display_sizes.index(size_index)]
         variants, variant_names = get_model_variants(yolo_version, size)
@@ -112,7 +115,7 @@ def main():
     if command:
         # ReID tracking model selection
         st.sidebar.markdown("### ReID Model Selection")
-        with_reid = st.sidebar.toggle('ReID Tracking', value=True, 
+        with_reid = st.sidebar.toggle('ReID Tracking', value=False, 
                             help='Enable ReID features for better tracking association')
         if with_reid:
             reid_model = st.sidebar.selectbox(
@@ -146,14 +149,14 @@ def main():
     # Start or stop tracking
     if source and model_path:
         if not st.session_state.tracking_active:
-            if track_button.button("Start Tracking"):
+            if track_button.button("Start Inference"):
                 st.session_state.tracking_active = True
                 st.session_state.show_results = True
                 st.session_state.stop_tracking = False
                 display_temporary_message("Starting", spinner, message_type= "status", duration=2)
                 st.rerun()
         else:
-            if track_button.button("Stop Tracking"):
+            if track_button.button("Stop Inference"):
                 reset_tracking_state()
                 if source_type == "Video File":
                     cleanup_temp_file("solovision.mp4")

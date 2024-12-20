@@ -73,8 +73,8 @@ def tracking_plot(
 
     # Highlight the last point with annotation
     ax.annotate(
-        f"{y_data[-1]}", xy=(x_data[-1], y_data[-1]), xytext=(x_data[-1], y_data[-1] + 1),
-        fontsize=18, color="#C70039", arrowprops=dict(facecolor="black", arrowstyle="->")
+        f"{y_data[-1]}", xy=(x_data[-1], y_data[-1]), xytext=(x_data[-1], y_data[-1] + 0.5),
+        fontsize=18, color="black", arrowprops=dict(edgecolor="black", arrowstyle="->")
     )
 
     # Set titles and labels with custom font sizes and colors

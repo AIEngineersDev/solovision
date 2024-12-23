@@ -115,8 +115,8 @@ def main():
     if command:
         # ReID tracking model selection
         st.sidebar.markdown("### ReID Model Selection")
-        with_reid = st.sidebar.toggle('ReID Tracking', value=False, 
-                            help='Enable ReID features for better tracking association')
+        with_reid = st.sidebar.toggle('REID Association', value=False, 
+                            help='Enable Feature Embeddings for better track id matching')
         if with_reid:
             reid_model = st.sidebar.selectbox(
                 "Select ReID Model", 
@@ -210,7 +210,7 @@ def main():
                     reset_tracking_state()
                     if source_type == "Video File":
                         cleanup_temp_file("solovision.mp4")
-                    display_temporary_message("Tracking Complete", spinner, message_type= "success", duration=2)
+                    display_temporary_message("Inference Complete", spinner, message_type= "success", duration=2)
                     st.session_state.placeholders["tracking"].empty()
                     st.session_state.placeholders["video"].empty()
                     torch.cuda.empty_cache()

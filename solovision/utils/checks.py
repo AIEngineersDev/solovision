@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 class RequirementsChecker:
+
     def check_requirements(self):
         requirements = pkg_resources.parse_requirements(REQUIREMENTS.open())
         self.check_packages(requirements)

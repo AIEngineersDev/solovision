@@ -31,6 +31,7 @@ Solovision is a state-of-the-art real-time object detection and tracking system 
 ## 🛠️ Installation
 
 Install the solovision package in a Python>=3.9 environment.
+
 ```bash
 pip install solovision
 ```
@@ -125,7 +126,6 @@ Check out the [Model Zoo](https://kaiyangzhou.github.io/deep-person-reid/MODEL_Z
 - **Feature History**: Maintain temporal appearance features for robust tracking
 - **Camera Motion Compensation**: Automatic adjustment for camera movement
 - **Multi-Camera Support**: Persist Tracker across multiple cameras/source
-
 
 ## 📊 Performance
 

@@ -18,10 +18,11 @@ def create_tracker(tracker_config=None, with_reid=True, reid_weights=None, devic
     - half: Boolean indicating whether to use half-precision.
     - per_class: Boolean for class-specific tracking (optional).
     - evolve_param_dict: A dictionary of parameters for evolving the tracker.
-   
+    
     Returns:
     - An instance of the selected tracker.
     """
+
     # Load configuration from file or use provided dictionary
     if evolve_param_dict is None:
         with open(tracker_config, "r") as f:

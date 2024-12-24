@@ -151,7 +151,6 @@ def load_pretrained_weights(model, weight_path):
                 f"Discarded layers due to unmatched keys or layer size: {discarded_layers}"
             )
 
-
 def show_available_models():
     """Displays available models."""
     LOGGER.info("Available models:")

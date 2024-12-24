@@ -18,7 +18,6 @@ from solovision.motion.cmc import get_cmc_method
 class ByteTracker(BaseTracker):
     """
     ByteTracker: State-of-the-art Multi Object Tracking Algorithm.
-
     Args:
         reid_weights (str): Path to the model weights for ReID.
         device (torch.device): Device to run the model on (e.g., 'cpu' or 'cuda').

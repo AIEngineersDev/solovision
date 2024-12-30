@@ -1,13 +1,18 @@
-# 🚀 SoloVision
+# 🚀 Solovision
 
 <div align="center">
 
+<img src="assets/logo/logo.png" alt="Solovision Logo" width="200"/>
+
 [![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/solovision)](https://pypi.org/project/solovision/)
+[![PyPI - Version](https://img.shields.io/pypi/v/solovision)](https://pypi.org/project/solovision/)
+
 
 </div>
 
-SoloVision is a state-of-the-art real-time object tracking system that seamlessly integrates with ReID (Re-Identification) architecture. Built on top of YOLO object detection, it provides robust multi-object tracking capabilities with advanced features for identity preservation across frames.
+Solovision is a state-of-the-art real-time object detection and tracking system that seamlessly integrates with ReID (Re-Identification) architecture. Built on top of YOLO object detection, it provides robust multi-object tracking capabilities with advanced features for identity preservation across frames.
 
 <div align="center">
   <img src="assets/results/solovision_results.gif" alt="SoloVision Results">
@@ -18,25 +23,29 @@ SoloVision is a state-of-the-art real-time object tracking system that seamlessl
 - 🎯 **High-Performance Tracking**: Implements ByteTrack algorithm for reliable multi-object tracking
 - 🔄 **ReID Integration**: Advanced re-identification capabilities for maintaining object identity
 - 🚀 **Real-time Processing**: Optimized for real-time applications with efficient processing
-- 📊 **Multiple Detection Backends**: Support for YOLOv8, YOLOv9, and other YOLO variants
+- 📊 **Multiple Detection Backends**: Support for YOLOv8, YOLOv9, YOLOv11 and all other previous YOLO variants
 - 💪 **Robust Motion Prediction**: Kalman filtering for smooth trajectory estimation
 - 🎨 **Flexible Visualization**: Customizable visualization options for tracking results
 - 🔧 **Easy-to-use CLI**: Simple command-line interface for quick deployment
 
 ## 🛠️ Installation
 
+Install the solovision package in a Python>=3.9 environment.
+
 ```bash
 pip install solovision
 ```
 
-Or install from source:
+Install from source:
 
 ```bash
-git clone https://github.com/zeeshaan28/solovision.git
+git clone https://github.com/AIEngineersDev/solovision.git
 cd solovision
 pip install .
+```
 
-For Dev
+Install in Dev
+```bash
 pip install poetry
 poetry install
 poetry shell
@@ -48,6 +57,7 @@ poetry shell
 
 ```python
 from solovision import ByteTracker
+from ultralytics import YOLO
 import cv2
 
 # Initialize tracker
@@ -64,8 +74,9 @@ while True:
     if not ret:
         break
         
-    # Get detections from your detector
-    detections = your_detector(frame)
+    # Get detections from yolo
+    model = YOLO('yolov8m.pt')
+    detections = model.predict(frame)
     
     # Update tracker
     tracks = tracker.update(detections, frame)
@@ -80,31 +91,41 @@ while True:
 ### Command Line Interface
 
 ```bash
-# Track objects in a video
-solovision track --source video.mp4 --yolo-model yolov8n.pt --reid-model osnet_x1_0_msmt17.pt
+# Detect objects across videos or streams
+solovision detect --source video_path --conf 0.25 --iou 0.45  
 
-# Track with custom settings
-solovision track --source video.mp4 --conf 0.25 --iou 0.45 --show --save
+# Track objects using unique id with custom settings
+solovision track --source video_path --yolo-model yolov8n.pt --reid-model osnet_x1_0_msmt17.pt --show --save --half \
+                --show-trajectories --save-txt --save-crops --per-class \
+                --classes 0 2 --device 0 --imgsz 640
+
+# Runs Interactive Web Application to perform real-time inference
+solovision run_app 
+
+# View all available CLI args
+solovision --help
 ```
 
-## 📋 Configuration Options
+## 🎯 ReID Models Support
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `reid_weights` | Path to ReID model weights | `osnet_x1_0_msmt17.pt` |
-| `track_high_thresh` | High confidence threshold | 0.5 |
-| `track_low_thresh` | Low confidence threshold | 0.1 |
-| `new_track_thresh` | New track threshold | 0.6 |
-| `track_buffer` | Frames to keep lost tracks | 30 |
-| `match_thresh` | Matching threshold | 0.8 |
+Solovision supports various state-of-the-art ReID architectures:
+
+- OSNet (x0.25, x0.5, x0.75, x1.0)
+- OSNet-AIN
+- OSNet-IBN
+- ResNet (50, 101)
+- CLIP-ReID
+
+Check out the [Model Zoo](https://kaiyangzhou.github.io/deep-person-reid/MODEL_ZOO.html) for pre-trained weights and performance benchmarks.
 
 ## 🔧 Advanced Features
 
+- **Tracking Analytics**: Line graphs and timestamp plotting for track id's
+- **Separate Merged Tracks**: Save separate videos of persistant tracks from multiple video sources
 - **Per-Class Tracking**: Enable separate tracking for different object classes
 - **Feature History**: Maintain temporal appearance features for robust tracking
 - **Camera Motion Compensation**: Automatic adjustment for camera movement
-- **Multi-Camera Support**: Track objects across multiple camera views
-- **Export Formats**: Save results in various formats (TXT, JSON, Video)
+- **Multi-Camera Support**: Persist Tracker across multiple cameras/source
 
 ## 📊 Performance
 
@@ -125,11 +146,12 @@ This project is licensed under the GNU Affero General Public License v3.0 - see 
 
 ```bibtex
 @software{solovision2024,
-  author = {Solo},
-  title = {SoloVision: State-of-the-art Real Time Object Tracking System},
+  author = {Diddi, Dhruv and Mohammed, Zeeshaan},
+  title = {Solovision: State-of-the-art Real-Time Object Tracking System},
   year = {2024},
   publisher = {GitHub},
-  url = {https://github.com/zeeshaan28/solovision}
+  organization = {AIEngineersDev},
+  url = {https://github.com/AIEngineersDev/solovision}
 }
 ```
 

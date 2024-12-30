@@ -1,8 +1,18 @@
+# Overview:
+# This pyproject.toml file manages the build, packaging, and distribution of the Solovision library.
+# It defines essential project metadata, dependencies, and settings used to develop and deploy the library.
+
+# Installation:
+# The Solovision library can be installed using the command: 'pip install solovision'
+# For development purposes, you can install the package in editable mode with: 'poetry install'
+# This approach allows for real-time code modifications without the need for re-installation.
+
 [tool.poetry]
 name = "solovision"
-version = "0.2.0"
-description = "State-of-the-art Real Time Object Tracking System integrated with ReID architecture "
-authors = ["Solo"]
+version = "0.0.1"
+description = "State-of-the-art Real Time Object Detection & Tracking System integrated with ReID architecture "
+authors = ["Dhruv Diddi",
+         "Zeeshaan Mohammed"]
 license = "AGPL-3.0"
 readme = "README.md"
 classifiers = [
@@ -28,7 +38,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.9,<3.9.7 || >3.9.7,<4.0"
 filterpy = "^1.4.5"
 gdown = "^5.1.0"
 lapx = "^0.5.5"
@@ -42,14 +52,15 @@ pandas = "^2.0.0"
 opencv-python = "^4.7.0"
 ftfy = "^6.1.3"
 gitpython = "^3.1.42"
-ultralytics = { git = "https://github.com/zeeshaan28/solo-ultralytics.git", rev = "bc44172f543ff2753058539c1fa48113d9e4c282", branch = "reid" }
+streamlit = "^1.29.0"
+matplotlib = "<=3.9.2"
 torch = [
+    {version = "^2.2.1", markers = "sys_platform == 'darwin'"},
     {version = "^2.2.1", source="torch_cuda121", markers = "sys_platform == 'linux' or sys_platform == 'win32'"},
-    {version = "^2.2.1", source="pypi", markers = "sys_platform == 'darwin'"},  
 ]
 torchvision = [
+    {version = "^0.17.1", markers = "sys_platform == 'darwin'"},
     {version = "^0.17.1", source="torch_cuda121", markers = "sys_platform == 'linux' or sys_platform == 'win32'"},
-    {version = "^0.17.1", source="pypi", markers = "sys_platform == 'darwin'"},    
 ]
 
 

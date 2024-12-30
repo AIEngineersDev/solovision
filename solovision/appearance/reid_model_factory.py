@@ -146,14 +146,10 @@ def load_pretrained_weights(model, weight_path):
             LOGGER.debug(
                 f"Pretrained weights from {weight_path} cannot be loaded. Check key names manually."
             )
-        else:
-            LOGGER.success(f"Loaded pretrained weights from {weight_path}")
-
         if len(discarded_layers) > 0:
             LOGGER.debug(
                 f"Discarded layers due to unmatched keys or layer size: {discarded_layers}"
             )
-
 
 def show_available_models():
     """Displays available models."""

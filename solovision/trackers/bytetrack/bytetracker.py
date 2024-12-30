@@ -17,8 +17,7 @@ from solovision.motion.cmc import get_cmc_method
 
 class ByteTracker(BaseTracker):
     """
-    BoTSORT Tracker: A tracking algorithm that combines appearance and motion-based tracking.
-
+    ByteTracker: State-of-the-art Multi Object Tracking Algorithm.
     Args:
         reid_weights (str): Path to the model weights for ReID.
         device (torch.device): Device to run the model on (e.g., 'cpu' or 'cuda').
@@ -323,3 +322,4 @@ class ByteTracker(BaseTracker):
         ]
 
         return np.asarray(outputs)
+

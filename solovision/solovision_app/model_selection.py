@@ -80,7 +80,7 @@ def get_reid_models():
         "osnet_x0_25_msmt17.pt",
         "osnet_x0_5_msmt17.pt",
         "osnet_x1_0_msmt17.pt",
-        "osnet_ain_x1_0_msmt17.pt"
+        "osnet_ain_x1_0_msmt17.pt",
         "osnet_ibn_x1_0_msmt17.pt",
-        "clip_market1501.pt"
+        "clip_market1501.pt",
     ] 

@@ -6,17 +6,17 @@ build:
   gpu: True
 
   # a list of ubuntu apt packages to install
-  # system_packages:
-  #   - "libgl1-mesa-glx"
-  #   - "libglib2.0-0"
-
+  system_packages:
+    - "libgl1-mesa-glx"
+    - "libglib2.0-0"
+    
   # python version in the form '3.11' or '3.11.4'
   python_version: "3.11"
 
   # a list of packages in the format <package-name>==<version>
   python_packages:
       - "solovision"
-      "git+https://github.com/GetSoloTech/solo-ultralytics"
+      - "git+https://github.com/GetSoloTech/solo-ultralytics"
 
   # commands run after the environment is setup
   #run:

@@ -183,7 +183,7 @@ class ByteTracker(BaseTracker):
             track = strack_pool[itracked]
             det = detections[idet]
             if track.state == TrackState.Tracked:
-                track.update(detections[idet], self.frame_count)
+                track.update(detections[idet], self.frame_count, self.min_hits)
                 activated_stracks.append(track)
             else:
                 track.re_activate(det, self.frame_count, new_id=False)
@@ -210,7 +210,7 @@ class ByteTracker(BaseTracker):
             track = r_tracked_stracks[itracked]
             det = detections_second[idet]
             if track.state == TrackState.Tracked:
-                track.update(det, self.frame_count)
+                track.update(det, self.frame_count, self.min_hits)
                 activated_stracks.append(track)
             else:
                 track.re_activate(det, self.frame_count, new_id=False)
@@ -259,7 +259,7 @@ class ByteTracker(BaseTracker):
         
         # Update matched unconfirmed tracks
         for itracked, idet in matches:
-            unconfirmed[itracked].update(detections[idet], self.frame_count)
+            unconfirmed[itracked].update(detections[idet], self.frame_count, self.min_hits)
             activated_stracks.append(unconfirmed[itracked])
 
         # Mark unmatched unconfirmed tracks as removed

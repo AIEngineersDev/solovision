@@ -119,11 +119,9 @@ class STrack(BaseTrack):
             self.update_features(new_track.curr_feat)
         self.tracklet_len = 0
         self.state = TrackState.Tracked
-
         self.frame_id = frame_id
         if new_id:
             self.activation_id = self.activation()
-        
         if self.activation_id is not None:
             self.is_activated = True
         self.is_activated = True
@@ -132,7 +130,7 @@ class STrack(BaseTrack):
         self.det_ind = new_track.det_ind
         self.update_cls(new_track.cls, new_track.conf)
 
-    def update(self, new_track, frame_id, min_hits = 6):
+    def update(self, new_track, frame_id, min_hits):
         """Update the current track with a matched detection."""
         self.frame_id = frame_id
         self.tracklet_len += 1

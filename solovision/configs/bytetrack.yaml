@@ -18,6 +18,11 @@ track_buffer:
   default: 300  # from the default parameters
   range: [20, 81]
 
+min_hits:
+  type: randint
+  default: 6  # from the default parameters
+  range: [1, 30]
+
 match_thresh:
   type: uniform
   default: 0.8  # from the default parameters

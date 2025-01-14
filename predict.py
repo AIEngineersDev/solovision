@@ -13,22 +13,20 @@ from ultralytics import YOLO
 from solovision import ByteTracker
 from cog import BasePredictor, Input, Path
 
+
 class Predictor(BasePredictor):
-    MODEL_WEIGHTS = "checkpoints/yolov8m.pt"
+    MODEL_WEIGHTS = "checkpoints/yolov8l.pt"
     REID_WEIGHTS = "checkpoints/osnet_x1_0_msmt17.pt"
 
     def setup(self) -> None:
         """Load the model into memory to make running multiple predictions efficient"""
         print("Starting model setup...")
-        device = "cuda:0" if torch.cuda.is_available() and torch.cuda.device_count() > 0 else "cpu"
-        print(f"Using device: {device}")
+        self.device = "cuda:0" if torch.cuda.is_available() and torch.cuda.device_count() > 0 else "cpu"
+        print(f"Using device: {self.device}")
         self.model = YOLO(self.MODEL_WEIGHTS)
-        self.tracker = ByteTracker(
-            with_reid=True,
-            reid_weights=Path(self.REID_WEIGHTS),
-            device=device,
-            half=False
-        )
+
+        # Ensures output directory exists
+        os.makedirs("outputs", exist_ok=True)
 
     def plot_detections(self, image: np.ndarray, tracks) -> np.ndarray:
         input_is_pil = isinstance(image, Image.Image)
@@ -86,9 +84,30 @@ class Predictor(BasePredictor):
         iou: float = Input(
             description="NMS Threshold", default=0.75
         ),
+        match_thresh: float = Input(
+            description="Id Matching Threshold", default=0.8
+        ),
+        track_buffer: int = Input(
+            description="Lost Tracks are held up to this time(300 Frames) before getting deleted", default=300
+        ),
+        with_reid: bool = Input(
+            description="Use REID for feature matching", default=True
+        ),
+        appearance_thresh: float = Input(
+            description="REID Appearance Matching Distance(Works when with_reid = True)", default=0.35
+        )
     ) -> Path:
 
-        # Create output directory
+        self.tracker = ByteTracker(
+            with_reid=with_reid,
+            reid_weights=Path(self.REID_WEIGHTS),
+            device=self.device,
+            half=False,
+            track_buffer=track_buffer,
+            match_thresh=match_thresh,
+            appearance_thresh=appearance_thresh,
+        )
+
         output_dir = Path("outputs")
         output_dir.mkdir(exist_ok=True)
         temp_dir = tempfile.mkdtemp()
@@ -111,15 +130,6 @@ class Predictor(BasePredictor):
         fps = int(cap.get(cv2.CAP_PROP_FPS))
         cap.release()
         
-        output_video_path = output_dir / "output_video.mp4"
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        video_writer = cv2.VideoWriter(
-            str(output_video_path), 
-            fourcc, 
-            fps, 
-            (width, height)
-        )
-
         # model predictions
         results = self.model.predict(**params)
         frame_idx = 0
@@ -133,15 +143,16 @@ class Predictor(BasePredictor):
             # Draw tracks on frame if they exist
             if len(tracks) > 0:
                 frame = self.plot_detections(frame, tracks)
+
             frame_path = os.path.join(temp_dir, f"frame_{frame_idx:05d}.png")
             cv2.imwrite(frame_path, frame)
-            
+
         print("[*] Generating outputs...")
         # Generate output video
         video_name = os.path.basename(str(video))
-        output_path = f"outputs/{video_name}"
+        output_path = output_dir/ "output_video.mp4"
         frames_pattern = os.path.join(temp_dir, "frame_%05d.png")
         ffmpeg_cmd = f"ffmpeg -y -r {fps} -i {frames_pattern} -c:v libx264 -pix_fmt yuv420p {output_path}"
         os.system(ffmpeg_cmd)
 
-        return Path(output_path)
+        return output_path

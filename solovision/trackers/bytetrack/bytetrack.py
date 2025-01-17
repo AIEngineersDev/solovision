@@ -15,9 +15,10 @@ from solovision.trackers.bytetrack.strack import STrack
 from solovision.motion.cmc import get_cmc_method
 
 
-class ByteTracker(BaseTracker):
+class ByteTrack(BaseTracker):
     """
-    ByteTracker: State-of-the-art Multi Object Tracking Algorithm.
+    ByteTrack: State-of-the-art Multi Object Tracking Algorithm.
+    
     Args:
         reid_weights (str): Path to the model weights for ReID.
         device (torch.device): Device to run the model on (e.g., 'cpu' or 'cuda').
@@ -108,7 +109,7 @@ class ByteTracker(BaseTracker):
         strack_pool = joint_stracks(active_tracks, self.lost_stracks)
 
         # First association
-        matches_first, u_track_first, u_detection_first = self._first_association(dets, dets_first, active_tracks, unconfirmed, img, detections, activated_stracks, refind_stracks, strack_pool)
+        matches_first, u_track_first, u_detection_first = self._first_association(dets, dets_first, active_tracks, lost_stracks, unconfirmed, img, detections, activated_stracks, refind_stracks, strack_pool)
 
         # Second association
         matches_second, u_track_second, u_detection_second = self._second_association(dets_second, activated_stracks, lost_stracks, refind_stracks, u_track_first, strack_pool)
@@ -154,7 +155,7 @@ class ByteTracker(BaseTracker):
                 active_tracks.append(track)
         return unconfirmed, active_tracks
 
-    def _first_association(self, dets, dets_first, active_tracks, unconfirmed, img, detections, activated_stracks, refind_stracks, strack_pool):
+    def _first_association(self, dets, dets_first, active_tracks, lost_tracks, unconfirmed, img, detections, activated_stracks, refind_stracks, strack_pool):
         
         STrack.multi_predict(strack_pool)
 
@@ -162,10 +163,10 @@ class ByteTracker(BaseTracker):
         warp = self.cmc.apply(img, dets)
         STrack.multi_gmc(strack_pool, warp)
         STrack.multi_gmc(unconfirmed, warp)
-
+        
         # Associate with high confidence detection boxes
         ious_dists = iou_distance(strack_pool, detections)
-        ious_dists_mask = ious_dists > self.proximity_thresh
+        ious_dists_mask = ious_dists > 0.7
         if self.fuse_first_associate:
             ious_dists = fuse_score(ious_dists, detections)
 
@@ -188,6 +189,11 @@ class ByteTracker(BaseTracker):
             else:
                 track.re_activate(det, self.frame_count, new_id=False)
                 refind_stracks.append(track)
+
+        print("-------------------------->")
+        print(f'First Association Matching:{len(matches)}')  
+        print(f'First Association Unconfirmed_tracks:{len(u_track)}')  
+        print(f'First Association Unconfirmed Detections:{len(u_detection)}') 
                 
         return matches, u_track, u_detection
 
@@ -200,7 +206,6 @@ class ByteTracker(BaseTracker):
         r_tracked_stracks = [
             strack_pool[i]
             for i in u_track_first
-            if strack_pool[i].state == TrackState.Tracked
         ]
 
         dists = iou_distance(r_tracked_stracks, detections_second)
@@ -215,15 +220,27 @@ class ByteTracker(BaseTracker):
             else:
                 track.re_activate(det, self.frame_count, new_id=False)
                 refind_stracks.append(track)
-
+        
         for it in u_track:
             track = r_tracked_stracks[it]
             if not track.state == TrackState.Lost:
                 track.mark_lost()
                 lost_stracks.append(track)
-                
+        print("-------------------------->")
+        print(f'Second Association Matching:{len(matches)}')  
+        print(f'Second Association Unconfirmed_tracks:{len(u_track)}')  
+        print(f'Second Association Unconfirmed Detections:{len(u_detection)}')   
+              
         return matches, u_track, u_detection
 
+    def embedding_only_matching(self, lost_tracks, detections):
+        if len(lost_tracks) == 0 or len(detections) == 0:
+            return [], range(len(lost_tracks)), range(len(detections))
+
+        emb_dists = embedding_distance(lost_tracks, detections)
+        emb_dists[emb_dists > self.appearance_thresh] = 1.0
+        matches, u_lost, u_det = linear_assignment(emb_dists, thresh=self.appearance_thresh)
+        return matches, u_lost, u_det
 
     def _handle_unconfirmed_tracks(self, u_detection, detections, activated_stracks, removed_stracks, unconfirmed):
         """
@@ -267,7 +284,11 @@ class ByteTracker(BaseTracker):
             track = unconfirmed[it]
             track.mark_removed()
             removed_stracks.append(track)
-            
+
+        print("-------------------------->")
+        print(f'Unconfirmed Association Matching:{len(matches)}')
+        print(f'Unconfirmed Association Unconfirmed_tracks:{len(u_unconfirmed)}')  
+        print(f'Unconfirmed Association Unconfirmed Detections:{len(u_detection)}')      
         return matches, u_unconfirmed, u_detection
 
     def _initialize_new_tracks(self, u_detections, activated_stracks, detections):
@@ -317,10 +338,16 @@ class ByteTracker(BaseTracker):
             self.active_tracks, self.lost_stracks
         )
 
+        print("-------------------------->")
+        print(f'lost tracks are {len(self.lost_stracks)}')
+
+        BaseTrack.print_total_count()
+
         outputs = [
             [*t.xyxy, t.activation_id, t.conf, t.cls, t.det_ind]
             for t in self.active_tracks if t.is_activated
         ]
 
         return np.asarray(outputs)
+
 

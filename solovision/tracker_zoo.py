@@ -1,12 +1,11 @@
 import yaml
 from solovision.utils import TRACKER_CONFIGS
-from solovision.trackers.bytetrack.bytetracker import ByteTracker
 
-def get_tracker_config(tracker_type):
+def get_tracker_config(tracker):
     """Returns the path to the tracker configuration file."""
-    return TRACKER_CONFIGS / f'{tracker_type}.yaml'
+    return TRACKER_CONFIGS / f'{tracker}.yaml'
 
-def create_tracker(tracker_config=None, with_reid=True, reid_weights=None, device=None, half=None, per_class=None, evolve_param_dict=None):
+def create_tracker(tracker=None, tracker_config=None, with_reid=True, reid_weights=None, device=None, half=None, per_class=None, evolve_param_dict=None):
     """
     Creates and returns an instance of the specified tracker type.
 
@@ -25,8 +24,11 @@ def create_tracker(tracker_config=None, with_reid=True, reid_weights=None, devic
 
     # Load configuration from file or use provided dictionary
     if evolve_param_dict is None:
+        print('Got here')
+        print(tracker_config)
         with open(tracker_config, "r") as f:
             yaml_config = yaml.load(f, Loader=yaml.FullLoader)
+            
             tracker_args = {param: details['default'] for param, details in yaml_config.items()}
     else:
         tracker_args = evolve_param_dict
@@ -39,7 +41,14 @@ def create_tracker(tracker_config=None, with_reid=True, reid_weights=None, devic
         'with_reid': with_reid
     }
 
-    tracker_class = ByteTracker
+    # Map tracker types to their corresponding classes
+    tracker_mapping = {
+        'bytetrack': 'solovision.trackers.bytetrack.bytetrack.ByteTrack',
+        'hybridsort': 'solovision.trackers.hybridsort.hybridsort.HybridSort',
+    }
+
+    module_path, class_name = tracker_mapping[tracker].rsplit('.', 1)
+    tracker_class = getattr(__import__(module_path, fromlist=[class_name]), class_name)
     tracker_args['per_class'] = per_class
     tracker_args.update(reid_args)
     

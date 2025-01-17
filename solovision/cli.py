@@ -68,6 +68,7 @@ def main():
     # Sub-command: Tracking
     parser_track = subparsers.add_parser("track", help="Run object tracking using cli")
     # Tracking arguments
+    parser_track.add_argument('--tracker', type = str, default='bytetrack', help="Select the tracker [bytetrack, hybridsort]")
     parser_track.add_argument('--with-reid', action='store_true', default=False, help="Use ReID features for tracking association")
     parser_track.add_argument('--reid-model', type=Path, default=WEIGHTS / 'osnet_x1_0_msmt17.pt', help="Path to ReID model")
     parser_track.add_argument('--half', action='store_true', help="Use FP16 half-precision for inference")

@@ -18,11 +18,12 @@ def ultralytics_model(model, ul_models):
 
 def on_predict_start(predictor, persist=False):
     """Initialize trackers for object tracking during prediction."""
-    tracking_config = TRACKER_CONFIGS / 'bytetrack.yaml'
+    tracking_config = TRACKER_CONFIGS / (predictor.custom_args.tracker + '.yaml')
     trackers = []
 
     for i in range(predictor.dataset.bs):
         tracker = create_tracker(
+            predictor.custom_args.tracker,
             tracking_config,
             predictor.custom_args.with_reid,
             predictor.custom_args.reid_model,

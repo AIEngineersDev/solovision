@@ -6,7 +6,8 @@ checker = RequirementsChecker()
 checker.check_packages(('ultralytics @ git+https://github.com/AIEngineersDev/solo-ultralytics.git', )) 
 
 from solovision.tracker_zoo import create_tracker, get_tracker_config
-from solovision.trackers.bytetrack.bytetracker import ByteTracker
+from solovision.trackers.bytetrack.bytetrack import ByteTrack
+from solovision.trackers.hybridsort.hybridsort import HybridSort
 
 __all__ = ("__version__",
-            "ByteTracker", "create_tracker", "get_tracker_config")
+            "ByteTrack", "HybridSort", "create_tracker", "get_tracker_config")

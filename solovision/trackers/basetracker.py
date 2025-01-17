@@ -1,11 +1,8 @@
 import numpy as np
 import cv2 as cv
-import hashlib
-import colorsys
 from abc import ABC, abstractmethod
 from solovision.utils import logger as LOGGER
 from solovision.utils.iou import AssociationFunction
-
 
 class BaseTracker(ABC):
     def __init__(
@@ -154,5 +151,3 @@ class BaseTracker(ABC):
         assert (
             dets.shape[1] == 6
         ), "Unsupported 'dets' 2nd dimension lenght, valid lenghts is 6"
-
-    

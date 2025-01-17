@@ -1,6 +1,7 @@
 import torch
 import numpy as np
 from pathlib import Path
+from typing import Optional
 
 from solovision.motion.kalman_filters.xywh_kf import KalmanFilterXYWH
 from solovision.appearance.reid_auto_backend import ReidAutoBackend
@@ -12,7 +13,6 @@ from solovision.trackers.basetracker import BaseTracker
 from solovision.trackers.bytetrack.bytetrack_utils import joint_stracks, sub_stracks, remove_duplicate_stracks 
 from solovision.trackers.bytetrack.strack import STrack
 from solovision.motion.cmc import get_cmc_method
-
 
 
 class ByteTracker(BaseTracker):
@@ -35,17 +35,17 @@ class ByteTracker(BaseTracker):
         fuse_first_associate (bool, optional): Fuse appearance and motion in the first association step.
         with_reid (bool, optional): Use ReID features for association.
     """
-
     def __init__(
         self,
-        reid_weights: Path,
+        reid_weights: Optional[Path],
         device: torch.device,
         half: bool,
         per_class: bool = False,
         track_high_thresh: float = 0.5,
         track_low_thresh: float = 0.1,
-        new_track_thresh: float = 0.6,
+        new_track_thresh: float = 0.5,
         track_buffer: int = 30,
+        min_hits: int = 6,
         match_thresh: float = 0.8,
         proximity_thresh: float = 0.5,
         appearance_thresh: float = 0.25,
@@ -64,6 +64,7 @@ class ByteTracker(BaseTracker):
         self.track_low_thresh = track_low_thresh
         self.new_track_thresh = new_track_thresh
         self.match_thresh = match_thresh
+        self.min_hits = min_hits
 
         self.buffer_size = int(frame_rate / 30.0 * track_buffer)
         self.max_time_lost = self.buffer_size
@@ -182,7 +183,7 @@ class ByteTracker(BaseTracker):
             track = strack_pool[itracked]
             det = detections[idet]
             if track.state == TrackState.Tracked:
-                track.update(detections[idet], self.frame_count)
+                track.update(detections[idet], self.frame_count, self.min_hits)
                 activated_stracks.append(track)
             else:
                 track.re_activate(det, self.frame_count, new_id=False)
@@ -209,7 +210,7 @@ class ByteTracker(BaseTracker):
             track = r_tracked_stracks[itracked]
             det = detections_second[idet]
             if track.state == TrackState.Tracked:
-                track.update(det, self.frame_count)
+                track.update(det, self.frame_count, self.min_hits)
                 activated_stracks.append(track)
             else:
                 track.re_activate(det, self.frame_count, new_id=False)
@@ -258,7 +259,7 @@ class ByteTracker(BaseTracker):
         
         # Update matched unconfirmed tracks
         for itracked, idet in matches:
-            unconfirmed[itracked].update(detections[idet], self.frame_count)
+            unconfirmed[itracked].update(detections[idet], self.frame_count, self.min_hits)
             activated_stracks.append(unconfirmed[itracked])
 
         # Mark unmatched unconfirmed tracks as removed
